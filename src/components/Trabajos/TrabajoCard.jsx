@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { motion } from "framer-motion";
 import { Eye } from "lucide-react";
 
@@ -8,15 +8,15 @@ import { palette } from "../../data/palette";
 import { urlVer, urlVista } from "../../utils/archivos";
 
 function TrabajoCard({ trabajo, categoria }) {
+  const [cargada, setCargada] = useState(false);
   const [fallo, setFallo] = useState(false);
 
   const tipo = TIPOS[trabajo.tipo] ?? TIPOS.pdf;
   const { Icon } = tipo;
   const color = categoria.color;
 
-  // Imagen previa: la indicada o la miniatura que genera Drive
-  const vista = urlVista(trabajo.archivo, trabajo.vista);
-  // Al pulsar "Ver" se abre el visor completo en una pestaña nueva
+  const vista = urlVista(trabajo.archivo, trabajo.vista, 400);
+  // "Ver" abre el visor completo en una pestaña nueva
   const ver = urlVer(trabajo.archivo);
 
   return (
@@ -40,31 +40,39 @@ function TrabajoCard({ trabajo, categoria }) {
         aria-label={`Ver ${trabajo.titulo}`}
         className="group relative block h-36 shrink-0 overflow-hidden"
       >
-        {vista && !fallo ? (
+        {/* Base: se ve al instante mientras llega la imagen (y si no llega) */}
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{
+            background: `linear-gradient(135deg, ${conAlpha(color, 0.22)}, ${conAlpha(color, 0.04)})`,
+            color,
+          }}
+        >
+          <Icon size={42} strokeWidth={1.4} />
+        </div>
+
+        {/* La imagen aparece con un fundido cuando termina de cargar */}
+        {vista && !fallo && (
           <img
             src={vista}
             alt=""
-            className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+            width="400"
+            height="288"
             loading="lazy"
+            decoding="async"
             referrerPolicy="no-referrer"
+            onLoad={() => setCargada(true)}
             onError={() => setFallo(true)}
+            className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-300 ${
+              cargada ? "opacity-100" : "opacity-0"
+            }`}
           />
-        ) : (
-          <div
-            className="w-full h-full flex items-center justify-center"
-            style={{
-              background: `linear-gradient(135deg, ${conAlpha(color, 0.22)}, ${conAlpha(color, 0.04)})`,
-              color,
-            }}
-          >
-            <Icon size={42} strokeWidth={1.4} />
-          </div>
         )}
 
         <span
-          className="font-mono-formula absolute top-3 left-3 rounded-md px-2 py-1 uppercase backdrop-blur-sm"
+          className="font-mono-formula absolute top-3 left-3 rounded-md px-2 py-1 uppercase"
           style={{
-            backgroundColor: "rgba(0,0,0,0.5)",
+            backgroundColor: "rgba(0,0,0,0.6)",
             color: "#fff",
             fontSize: "0.6rem",
             letterSpacing: "0.1em",
@@ -143,4 +151,4 @@ function TrabajoCard({ trabajo, categoria }) {
   );
 }
 
-export default TrabajoCard;
+export default memo(TrabajoCard);

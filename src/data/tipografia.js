@@ -1,4 +1,3 @@
-// Tamaños de letra del sitio. Cámbialos aquí y se actualizan TODAS las secciones.
 export const tipografia = {
     // Texto pequeño en mayúsculas sobre el título (Perfil, Portafolio...)
     etiqueta: { fontSize: "0.6rem", letterSpacing: "0.14em" },

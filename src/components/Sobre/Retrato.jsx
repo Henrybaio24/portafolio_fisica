@@ -35,10 +35,6 @@ const CHIPS = [
   },
 ];
 
-/**
- * Retrato animado: se inclina siguiendo el mouse, flota, tiene resplandor
- * y una línea de luz que lo recorre. Acepta imagen o un video corto en bucle.
- */
 function Retrato({ imagen, video, alt = "Retrato" }) {
   const reduce = useReducedMotion();
   const ref = useRef(null);

@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { X } from "lucide-react";
 
 import TrabajoCard from "./TrabajoCard";
@@ -9,6 +9,8 @@ import { palette } from "../../data/palette";
 import { tipografia } from "../../data/tipografia";
 
 const porId = Object.fromEntries(categorias.map((c) => [c.id, c]));
+
+const LOTE = 12;
 
 function Filtro({ label, count, color, activo, onClick }) {
   return (
@@ -35,7 +37,9 @@ function Filtro({ label, count, color, activo, onClick }) {
 function TrabajosTodos({ onVolver }) {
   const { trabajos } = useContenido();
   const [filtro, setFiltro] = useState("todos");
+  const [limite, setLimite] = useState(LOTE);
   const listaRef = useRef(null);
+  const centinela = useRef(null);
 
   const visibles =
     filtro === "todos"
@@ -45,8 +49,22 @@ function TrabajosTodos({ onVolver }) {
 
   const elegir = (id) => {
     setFiltro(id);
-    listaRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    setLimite(LOTE);
+    listaRef.current?.scrollTo({ top: 0 });
   };
+
+  // Al acercarte al final de la lista, se dibuja el siguiente lote
+  const hayMas = limite < visibles.length;
+  useEffect(() => {
+    const el = centinela.current;
+    if (!el) return;
+    const observador = new IntersectionObserver(
+      ([e]) => e.isIntersecting && setLimite((n) => n + LOTE),
+      { rootMargin: "600px" },
+    );
+    observador.observe(el);
+    return () => observador.disconnect();
+  }, [limite, hayMas, filtro]);
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -109,27 +127,25 @@ function TrabajosTodos({ onVolver }) {
       {/* Tarjetas: solo esta zona se desplaza (en pantallas grandes) */}
       <div
         ref={listaRef}
-        className="mt-4 lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:pr-2 lg:pb-8 lg:[mask-image:linear-gradient(to_bottom,black_94%,transparent)] [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.18)_transparent]"
+        className="mt-4 lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:pr-2 lg:pb-8 [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.18)_transparent]"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-          <AnimatePresence mode="popLayout">
-            {visibles.map((t) => (
-              <motion.div
-                key={t.id}
-                layout
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.25 }}
-              >
-                <TrabajoCard
-                  trabajo={t}
-                  categoria={porId[t.categoria] ?? categorias[0]}
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+        <motion.div
+          key={filtro}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.25 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4"
+        >
+          {visibles.slice(0, limite).map((t) => (
+            <TrabajoCard
+              key={t.id}
+              trabajo={t}
+              categoria={porId[t.categoria] ?? categorias[0]}
+            />
+          ))}
+        </motion.div>
+
+        {hayMas && <div ref={centinela} className="h-10" aria-hidden="true" />}
 
         {visibles.length === 0 && (
           <p

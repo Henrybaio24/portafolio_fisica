@@ -22,7 +22,7 @@ function Sobre() {
   // Si no pones "sobreMi" en profile.js, se usa este texto con tus datos
   const texto =
     profile.sobreMi ??
-    `Soy ${profile.nombre}, estudiante de ${profile.curso.toLowerCase()} de ${profile.carrera} en la ${profile.universidad}. Este portafolio reúne mis trabajos de Física Aplicada: laboratorios, ensayos, pruebas y proyectos del semestre.`;
+    `Soy ${profile.nombre}, estudiante de ${profile.curso.toLowerCase()} de ${profile.carrera} en la ${profile.universidad}. Me considero una persona observadora, directa para decir las cosas y con poca paciencia cuando algo se estanca. Cuando no estoy en la computadora, mi plan fijo para relajarme es escuchar música y ver videos. Si quieres conocer más sobre mi trayectoria y lo que he venido haciendo, por aquí puedes revisar mi CV.`;
 
   return (
     <section

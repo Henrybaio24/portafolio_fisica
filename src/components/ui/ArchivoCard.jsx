@@ -5,11 +5,6 @@ import { Download, Eye, FileText } from "lucide-react";
 import { urlDescargar, urlVer, urlVista } from "../../utils/archivos";
 import { palette } from "../../data/palette";
 
-/**
- * Tarjeta de un archivo: imagen previa + botón Ver (visor completo en pestaña nueva)
- * + botón Descargar.
- * archivo = { archivo: "enlace de Drive o /ruta.pdf", vista: "imagen previa (opcional)" } o null
- */
 function ArchivoCard({
   etiqueta,
   titulo,
@@ -18,7 +13,7 @@ function ArchivoCard({
 }) {
   const [fallo, setFallo] = useState(false);
 
-  const vista = archivo ? urlVista(archivo.archivo, archivo.vista) : null;
+  const vista = archivo ? urlVista(archivo.archivo, archivo.vista, 240) : null;
   const ver = archivo ? urlVer(archivo.archivo) : null;
   const descargar = archivo ? urlDescargar(archivo.archivo) : null;
 

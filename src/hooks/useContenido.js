@@ -39,7 +39,7 @@ async function cargar() {
             descripcion: f.descripcion,
             fecha: f.fecha,
             archivo: f.enlace,
-            vista: null,
+            vista: null, // la imagen previa sale sola del enlace de Drive
         }));
 
     const masReciente = (seccion) =>
@@ -83,18 +83,25 @@ async function cargar() {
     };
 }
 
-
 let promesa = null;
+let cache = null;
+
+export function precargarContenido() {
+    promesa ??= cargar()
+        .catch((e) => {
+            console.warn("No se pudo leer el Sheet:", e.message);
+            return respaldo;
+        })
+        .then((d) => (cache = d));
+    return promesa;
+}
+
 export function useContenido() {
-    const [contenido, setContenido] = useState(respaldo);
+    const [contenido, setContenido] = useState(cache ?? respaldo);
 
     useEffect(() => {
         let vivo = true;
-        promesa ??= cargar().catch((e) => {
-            console.warn("No se pudo leer el Sheet:", e.message);
-            return respaldo;
-        });
-        promesa.then((d) => vivo && setContenido(d));
+        precargarContenido().then((d) => vivo && setContenido(d));
         return () => {
             vivo = false;
         };
