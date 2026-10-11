@@ -1,3 +1,11 @@
+import { config } from "../data/config";
+
+// Enlace (CSV) de una pestaña del Sheet, armado con el sheetId de config.js
+export const urlHoja = (pestana) =>
+    config.sheetId
+        ? `https://docs.google.com/spreadsheets/d/${config.sheetId}/gviz/tq?tqx=out:csv&headers=1&sheet=${pestana}`
+        : "";
+
 // Lee hojas de Google Sheets publicadas como CSV. No necesita claves ni librerías.
 
 function parsearCSV(texto) {

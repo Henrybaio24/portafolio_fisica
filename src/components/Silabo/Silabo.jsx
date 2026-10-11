@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 import UnidadCard from "./UnidadCard";
 import ArchivoCard from "../ui/ArchivoCard";
-import { silabo } from "../../data/silabo";
+import { useContenido } from "../../hooks/useContenido";
 import { palette } from "../../data/palette";
 import { tipografia } from "../../data/tipografia";
 
@@ -16,6 +16,7 @@ const item = {
 };
 
 function Silabo() {
+  const { silabo } = useContenido();
   const { unidades } = silabo;
   const documento = silabo.archivo
     ? { archivo: silabo.archivo, vista: silabo.vista }
@@ -57,8 +58,9 @@ function Silabo() {
             className="font-body mt-4 max-w-md"
             style={{ color: palette.muted, ...tipografia.descripcion }}
           >
-            Contenidos de {silabo.asignatura} organizados en {unidades.length}{" "}
-            unidades.
+            {unidades.length
+              ? `Contenidos de ${silabo.asignatura} organizados en ${unidades.length} unidades.`
+              : "Las unidades aún no se han agregado."}
           </motion.p>
 
           <motion.div variants={item} className="mt-8 w-full">

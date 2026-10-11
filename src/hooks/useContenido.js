@@ -1,25 +1,32 @@
 import { useEffect, useState } from "react";
 
-import { leerHoja } from "../services/sheets";
-import { config } from "../data/config";
+import { leerHoja, urlHoja } from "../services/sheets";
 import { trabajos as trabajosLocal } from "../data/trabajos";
 import { silabo as silaboLocal } from "../data/silabo";
 import { profile } from "../data/profile";
 
-// Datos de respaldo: se usan mientras carga, si no hay Sheet configurado o si falla
 const local = {
     trabajos: trabajosLocal,
     silabo: silaboLocal,
     cv: profile.cv ?? null,
 };
+const vacio = {
+    trabajos: [],
+    silabo: { ...silaboLocal, archivo: null, unidades: [] },
+    cv: null,
+};
+const urlArchivos = urlHoja("archivos");
+const urlUnidades = urlHoja("unidades");
+const usarSheet = Boolean(urlArchivos);
+const respaldo = usarSheet ? vacio : local;
 
 const esVisible = (f) => (f.visible || "SI").toUpperCase() !== "NO";
 const masNuevoPrimero = (a, b) => (b.fecha || "").localeCompare(a.fecha || "");
 
 async function cargar() {
-    if (!config.hojaArchivos) return local;
+    if (!usarSheet) return local;
 
-    const filas = (await leerHoja(config.hojaArchivos)).filter(esVisible);
+    const filas = (await leerHoja(urlArchivos)).filter(esVisible);
 
     const trabajos = filas
         .filter((f) => f.seccion === "trabajo")
@@ -32,50 +39,60 @@ async function cargar() {
             descripcion: f.descripcion,
             fecha: f.fecha,
             archivo: f.enlace,
-            vista: null, // si es de Drive, la imagen previa sale sola del enlace
+            vista: null,
         }));
 
-    // CV y sílabo: se usa el más reciente
     const masReciente = (seccion) =>
         filas.filter((f) => f.seccion === seccion).sort(masNuevoPrimero)[0];
-    const cvFila = masReciente("cv");
-    const silaboFila = masReciente("silabo");
+    const cv = masReciente("cv");
+    const silabo = masReciente("silabo");
 
-    let unidades = local.silabo.unidades;
-    if (config.hojaUnidades) {
-        unidades = (await leerHoja(config.hojaUnidades))
-            .filter(esVisible)
-            .map((u) => ({
-                numero: Number(u.numero),
-                titulo: u.titulo,
-                descripcion: u.descripcion,
-                archivo: u.enlace || null,
-            }))
-            .sort((a, b) => a.numero - b.numero);
-    }
+    const unidades = (await leerHoja(urlUnidades))
+        .filter(esVisible)
+        .map((u) => ({
+            numero: Number(u.numero),
+            titulo: u.titulo,
+            descripcion: u.descripcion,
+            archivo: u.enlace || null,
+        }))
+        .sort((a, b) => a.numero - b.numero);
+
+    const documentos = [
+        cv && { fila: cv, titulo: "Curriculum Vitae", descripcion: "Currículum vitae del estudiante." },
+        silabo && { fila: silabo, titulo: "Sílabo de la asignatura", descripcion: "Sílabo con las unidades y contenidos del curso." },
+    ]
+        .filter(Boolean)
+        .map(({ fila, titulo, descripcion }) => ({
+            titulo: fila.titulo || titulo,
+            categoria: "documentos",
+            tipo: (fila.tipo || "pdf").toLowerCase(),
+            descripcion: fila.descripcion || descripcion,
+            fecha: fila.fecha,
+            archivo: fila.enlace,
+            vista: null,
+        }));
+
+    const todos = [...trabajos, ...documentos]
+        .sort(masNuevoPrimero)
+        .map((t, i) => ({ ...t, id: i + 1 }));
 
     return {
-        trabajos,
-        cv: cvFila ? { archivo: cvFila.enlace } : local.cv,
-        silabo: {
-            ...local.silabo,
-            archivo: silaboFila?.enlace ?? local.silabo.archivo,
-            unidades,
-        },
+        trabajos: todos,
+        cv: cv ? { archivo: cv.enlace } : null,
+        silabo: { ...local.silabo, archivo: silabo?.enlace ?? null, unidades },
     };
 }
 
-// Se descarga una sola vez y se comparte entre todas las secciones
-let promesa = null;
 
+let promesa = null;
 export function useContenido() {
-    const [contenido, setContenido] = useState(local);
+    const [contenido, setContenido] = useState(respaldo);
 
     useEffect(() => {
         let vivo = true;
         promesa ??= cargar().catch((e) => {
-            console.warn("Usando datos locales:", e.message);
-            return local;
+            console.warn("No se pudo leer el Sheet:", e.message);
+            return respaldo;
         });
         promesa.then((d) => vivo && setContenido(d));
         return () => {

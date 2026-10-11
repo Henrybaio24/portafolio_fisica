@@ -6,6 +6,7 @@ import yo from "../../assets/yo.jpg";
 import { palette } from "../../data/palette";
 import { tipografia } from "../../data/tipografia";
 import { profile } from "../../data/profile";
+import { useContenido } from "../../hooks/useContenido";
 
 const container = {
   hidden: {},
@@ -17,6 +18,7 @@ const item = {
 };
 
 function Sobre() {
+  const { cv } = useContenido();
   // Si no pones "sobreMi" en profile.js, se usa este texto con tus datos
   const texto =
     profile.sobreMi ??
@@ -76,7 +78,7 @@ function Sobre() {
           </motion.p>
 
           <motion.div variants={item} className="mt-8 w-full">
-            <CvCard cv={profile.cv} />
+            <CvCard cv={cv} />
           </motion.div>
         </motion.div>
       </div>
