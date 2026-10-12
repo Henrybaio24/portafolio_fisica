@@ -4,9 +4,9 @@ import Retrato from "./Retrato";
 import CvCard from "./CvCard";
 import yo from "../../assets/yo.jpg";
 import { palette } from "../../data/palette";
+import { useContenido } from "../../hooks/useContenido";
 import { tipografia } from "../../data/tipografia";
 import { profile } from "../../data/profile";
-import { useContenido } from "../../hooks/useContenido";
 
 const container = {
   hidden: {},
@@ -22,12 +22,12 @@ function Sobre() {
   // Si no pones "sobreMi" en profile.js, se usa este texto con tus datos
   const texto =
     profile.sobreMi ??
-    `Soy ${profile.nombre}, estudiante de ${profile.curso.toLowerCase()} de ${profile.carrera} en la ${profile.universidad}. Me considero una persona observadora, directa para decir las cosas y con poca paciencia cuando algo se estanca. Cuando no estoy en la computadora, mi plan fijo para relajarme es escuchar música y ver videos. Si quieres conocer más sobre mi trayectoria y lo que he venido haciendo, por aquí puedes revisar mi CV.`;
+    `Soy ${profile.nombre}, estudiante de ${profile.curso.toLowerCase()} de ${profile.carrera} en la ${profile.universidad}. Este portafolio reúne mis trabajos de Física Aplicada: laboratorios, ensayos, pruebas y proyectos del semestre.`;
 
   return (
     <section
       id="sobre"
-      className="scroll-mt-16 min-h-[calc(100svh-4rem)] flex items-center px-6 sm:px-12 lg:px-16 py-12"
+      className="scroll-mt-16 min-h-[calc(100svh-4rem)] flex items-center overflow-hidden px-6 sm:px-12 lg:px-16 py-12"
       style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
     >
       <div className="w-full max-w-7xl mx-auto grid lg:grid-cols-[0.8fr_1.2fr] gap-14 lg:gap-20 items-center">
@@ -37,7 +37,7 @@ function Sobre() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          className="px-6 sm:px-10"
+          className="order-2 lg:order-1 px-6 sm:px-10"
         >
           <Retrato imagen={yo} video={profile.video} alt={profile.nombre} />
         </motion.div>
@@ -48,7 +48,7 @@ function Sobre() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
-          className="flex flex-col items-start"
+          className="order-1 lg:order-2 flex flex-col items-start"
         >
           <motion.p
             variants={item}

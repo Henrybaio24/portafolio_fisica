@@ -1,4 +1,4 @@
-export const DIAS_BIENVENIDA = 7;
+export const DIAS_BIENVENIDA = 1;
 
 const CLAVE = "portafolio:bienvenida";
 

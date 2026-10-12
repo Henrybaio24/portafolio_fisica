@@ -13,25 +13,25 @@ import { palette } from "../../data/palette";
 // Etiquetas que flotan alrededor del retrato (cámbialas a tu gusto)
 const CHIPS = [
   {
-    label: "Física",
-    Icon: Atom,
-    pos: "top-[9%] -right-2 sm:-right-10",
-    dur: 4.2,
-    delay: 0,
-  },
-  {
     label: "Informática",
     Icon: Terminal,
-    pos: "top-[46%] -left-2 sm:-left-12",
+    pos: "top-[46%] left-2 sm:-left-12",
     dur: 5,
     delay: 0.6,
   },
   {
     label: "Pedagogía",
     Icon: GraduationCap,
-    pos: "bottom-[12%] -right-1 sm:-right-9",
+    pos: "bottom-[12%] right-2 sm:-right-9",
     dur: 4.6,
     delay: 1.1,
+  },
+  {
+    label: "Física",
+    Icon: Atom,
+    pos: "top-[9%] right-2 sm:-right-10",
+    dur: 4.2,
+    delay: 0,
   },
 ];
 
@@ -64,7 +64,7 @@ function Retrato({ imagen, video, alt = "Retrato" }) {
       className="relative mx-auto"
       style={{
         perspective: 1100,
-        height: "min(68vh, 600px)",
+        height: "min(54vh, 560px)",
         aspectRatio: "900 / 1612",
       }}
     >

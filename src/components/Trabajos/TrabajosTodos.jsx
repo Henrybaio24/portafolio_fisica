@@ -69,7 +69,10 @@ function TrabajosTodos({ onVolver }) {
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {/* Encabezado */}
-      <header className="shrink-0 flex items-center justify-between gap-4">
+      <header
+        className="shrink-0 flex items-center justify-between gap-4 sticky top-0 z-10 -mx-6 sm:-mx-10 px-6 sm:px-10 py-3 lg:static lg:mx-0 lg:px-0 lg:py-0"
+        style={{ backgroundColor: palette.bg }}
+      >
         <h2
           className="font-display font-bold"
           style={{
@@ -82,7 +85,7 @@ function TrabajosTodos({ onVolver }) {
 
         <div className="flex items-center gap-4">
           <p
-            className="font-body"
+            className="font-body whitespace-nowrap"
             style={{ color: palette.muted, fontSize: "0.8rem" }}
           >
             <span style={{ color: palette.text }}>{visibles.length}</span> de{" "}

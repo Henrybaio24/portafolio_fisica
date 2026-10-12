@@ -82,7 +82,7 @@ function Navbar({ onMenuClick }) {
         </button>
 
         {/* Título en dos líneas, a la izquierda */}
-        <div className="flex flex-col leading-none shrink-0">
+        <div className="hidden sm:flex flex-col leading-none shrink-0">
           <span
             className="font-body font-semibold uppercase"
             style={{
@@ -132,7 +132,7 @@ function Navbar({ onMenuClick }) {
             <GraduationCap
               size={20}
               strokeWidth={1.8}
-              className="shrink-0"
+              className="shrink-0 hidden sm:block"
               style={{ color: palette.accent }}
             />
             <span

@@ -115,7 +115,7 @@ function Portada() {
         </motion.div>
         <motion.div
           variants={item}
-          className="self-start w-full max-w-[260px] sm:max-w-[320px] lg:max-w-[360px] mx-auto lg:ml-auto"
+          className="self-start w-full lg:max-w-[360px] lg:ml-auto"
         >
           <Fila Icon={GraduationCap} label="Carrera" value={profile.carrera} />
         </motion.div>

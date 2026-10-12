@@ -1,12 +1,5 @@
 import { motion } from "framer-motion";
-import {
-  House,
-  User,
-  BookOpen,
-  FlaskConical,
-  FolderOpen,
-  Circle,
-} from "lucide-react";
+import { House, User, BookOpen, FolderOpen, Circle } from "lucide-react";
 import AtomMark from "../Hero/AtomMark";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
 import { navSections } from "../../data/navigation";
@@ -21,7 +14,6 @@ const icons = {
   portada: House,
   sobre: User,
   silabo: BookOpen,
-  laboratorio: FlaskConical,
   trabajos: FolderOpen,
 };
 

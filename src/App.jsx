@@ -13,30 +13,6 @@ import { useFonts } from "./hooks/useFonts";
 import { precargarContenido } from "./hooks/useContenido";
 import { marcarBienvenida, yaVioBienvenida } from "./utils/bienvenida";
 import { palette } from "./data/palette";
-import { tipografia } from "./data/tipografia";
-
-function Placeholder({ id, label }) {
-  return (
-    <section
-      id={id}
-      className="min-h-svh scroll-mt-16 px-6 sm:px-12 py-16"
-      style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
-    >
-      <h2
-        className="font-display font-bold"
-        style={{ color: palette.text, ...tipografia.titulo }}
-      >
-        {label}
-      </h2>
-      <p
-        className="font-body mt-4"
-        style={{ color: palette.muted, ...tipografia.descripcion }}
-      >
-        Contenido de esta sección próximamente.
-      </p>
-    </section>
-  );
-}
 
 const CARGA_MINIMA_MS = 900; // la pantalla de carga se ve al menos este tiempo (evita parpadeos)
 const CARGA_MAXIMA_MS = 7000; // si algo tarda más, se entra igual
@@ -118,11 +94,10 @@ function App() {
             <Navbar onMenuClick={() => setMenuOpen((v) => !v)} />
             <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
 
-            <main className="pt-16 lg:ml-60">
+            <main className="pt-16 lg:ml-60 overflow-x-clip">
               <Portada />
               <Sobre />
               <Silabo />
-              {/*<Placeholder id="laboratorio" label="Laboratorio" />*/}
               <Trabajos />
             </main>
           </motion.div>
