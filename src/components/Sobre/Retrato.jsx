@@ -6,36 +6,10 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { Atom, GraduationCap, Terminal } from "lucide-react";
 
 import { palette } from "../../data/palette";
 
-// Etiquetas que flotan alrededor del retrato (cámbialas a tu gusto)
-const CHIPS = [
-  {
-    label: "Informática",
-    Icon: Terminal,
-    pos: "top-[46%] left-2 sm:-left-12",
-    dur: 5,
-    delay: 0.6,
-  },
-  {
-    label: "Pedagogía",
-    Icon: GraduationCap,
-    pos: "bottom-[12%] right-2 sm:-right-9",
-    dur: 4.6,
-    delay: 1.1,
-  },
-  {
-    label: "Física",
-    Icon: Atom,
-    pos: "top-[9%] right-2 sm:-right-10",
-    dur: 4.2,
-    delay: 0,
-  },
-];
-
-function Retrato({ imagen, video, alt = "Retrato" }) {
+function Retrato({ imagen, video, chips = [], alt = "Retrato" }) {
   const reduce = useReducedMotion();
   const ref = useRef(null);
 
@@ -68,7 +42,6 @@ function Retrato({ imagen, video, alt = "Retrato" }) {
         aspectRatio: "900 / 1612",
       }}
     >
-      {/* Resplandor que respira */}
       <motion.div
         className="absolute -inset-8 rounded-[2.5rem] blur-3xl pointer-events-none"
         style={{
@@ -78,19 +51,16 @@ function Retrato({ imagen, video, alt = "Retrato" }) {
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Inclinación 3D */}
       <motion.div
         className="relative w-full h-full"
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
       >
-        {/* Flotación */}
         <motion.div
           className="relative w-full h-full"
           style={{ transformStyle: "preserve-3d" }}
           animate={reduce ? undefined : { y: [0, -10, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         >
-          {/* Marco con la imagen */}
           <div
             className="absolute inset-0 rounded-3xl overflow-hidden"
             style={{
@@ -116,7 +86,6 @@ function Retrato({ imagen, video, alt = "Retrato" }) {
               />
             )}
 
-            {/* Línea de luz que recorre la imagen */}
             {!reduce && (
               <motion.div
                 className="absolute inset-x-0 top-0 h-1/3 pointer-events-none"
@@ -130,8 +99,7 @@ function Retrato({ imagen, video, alt = "Retrato" }) {
             )}
           </div>
 
-          {/* Etiquetas flotantes, con profundidad */}
-          {CHIPS.map(({ label, Icon, pos, dur, delay }) => (
+          {chips.map(({ label, Icon, pos, dur, delay }) => (
             <motion.div
               key={label}
               className={`absolute ${pos}`}

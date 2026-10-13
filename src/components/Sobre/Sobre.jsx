@@ -4,6 +4,7 @@ import Retrato from "./Retrato";
 import CvCard from "./CvCard";
 import yo from "../../assets/yo.jpg";
 import { palette } from "../../data/palette";
+import { chips } from "../../data/chips";
 import { useContenido } from "../../hooks/useContenido";
 import { tipografia } from "../../data/tipografia";
 import { profile } from "../../data/profile";
@@ -19,7 +20,6 @@ const item = {
 
 function Sobre() {
   const { cv } = useContenido();
-  // Si no pones "sobreMi" en profile.js, se usa este texto con tus datos
   const texto =
     profile.sobreMi ??
     `Soy ${profile.nombre}, estudiante de ${profile.curso.toLowerCase()} de ${profile.carrera} en la ${profile.universidad}. Este portafolio reúne mis trabajos de Física Aplicada: laboratorios, ensayos, pruebas y proyectos del semestre.`;
@@ -31,7 +31,6 @@ function Sobre() {
       style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
     >
       <div className="w-full max-w-7xl mx-auto grid lg:grid-cols-[0.8fr_1.2fr] gap-14 lg:gap-20 items-center">
-        {/* Retrato animado */}
         <motion.div
           initial={{ opacity: 0, scale: 0.94 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -39,7 +38,12 @@ function Sobre() {
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="order-2 lg:order-1 px-6 sm:px-10"
         >
-          <Retrato imagen={yo} video={profile.video} alt={profile.nombre} />
+          <Retrato
+            imagen={yo}
+            video={profile.video}
+            chips={chips}
+            alt={profile.nombre}
+          />
         </motion.div>
 
         {/* Texto y CV */}
